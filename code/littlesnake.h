@@ -4,7 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "dependencies/freeglut/include/GL/freeglut.h"
+#include <GL/freeglut.h>
+
+/// @brief how many obstacles at most the game has
+#define MAX_OBSTACLES 10
 
 /// @brief all types of movement available on the grid
 typedef enum direction_t
@@ -20,15 +23,24 @@ typedef struct node_t
 {
     int32_t x;
     int32_t y;
-    node* next;
-    node* prev;
-} node;
+    struct node_t* next;
+    struct node_t* prev;
+} node_t;
+
+/// @brief holds information about obstacles
+typedef struct obstacle_t
+{
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+} obstacle_t;
 
 /// @brief holds information about the game
 typedef struct gamestate_t
 {
-    node* head;
-    node* change;
+    node_t* head;
+    node_t* change;
     int32_t snake_size;
     int32_t highest_score;
     int32_t change_x;
@@ -39,12 +51,14 @@ typedef struct gamestate_t
     bool ate;
     bool play;
     direction dir;
-} gamestate;
+    obstacle_t obstacles[MAX_OBSTACLES];
+    uint32_t current_obstacles;
+} gamestate_t;
 
 /////////////////////////////////////////////////////////////////////////////// node functions
 
 /// @brief adds a node after a given node inside a double linked list
-bool node_add(node* add);
+bool node_add(node_t* add);
 
 /// @brief releases the double linked list
 bool node_free();
@@ -55,13 +69,33 @@ bool node_same_coordinates(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 /// @brief searches on the node if node exists (based on coords)
 bool node_search(int32_t x, int32_t y);
 
+/////////////////////////////////////////////////////////////////////////////// obstacle functions
+
+/// @brief handle viewport wrapping
+void wrap_position(int32_t* x, int32_t* y);
+
+/// @brief check if the snake head collides with any obstacle
+bool check_obstacle_collision(int32_t x, int32_t y);
+
+/// @brief checks if position is collinding with obstacle
+bool is_position_overlapping_obstacle(int32_t x, int32_t y, int32_t margin);
+
+/// @brief returns if position is colliding with snake
+bool is_position_overlapping_snake(int32_t x, int32_t y);
+
+/// @brief generate 6-10 obstacles with random sizes
+void generate_obstacles();
+
+/// @brief draws the obstacles
+void draw_obstacles();
+
 /////////////////////////////////////////////////////////////////////////////// opengl functions
 
 /// @brief setup initial open gl config
 void ogl_init();
 
 /// @brief draws the game's standart rectangle on the coordinates
-void ogl_draw_cell(int x, int y);
+void ogl_draw_cell(int32_t x, int32_t y);
 
 /////////////////////////////////////////////////////////////////////////////// gamestate functions
 
@@ -93,7 +127,7 @@ void gamestate_snake_move();
 void gamestate_call_init();
 
 /// @brief callback called by glutDisplayFunc
-void gamestate_call_display();
+void gamestate_call_display(void);
 
 /// @brief callback baclled by glutKeyboardFunc
 void gamestate_call_keyboard(unsigned char key, int32_t x, int32_t y);
@@ -105,9 +139,6 @@ void gamestate_call_keyboard_special(int32_t key, int32_t x, int32_t y);
 
 /// @brief clears the screen, platform independent
 void display_clear_screen();
-
-/// @brief clears the screen input without fflush
-void display_clear_input_buffer();
 
 /// @brief prints usefull info
 void display_help();

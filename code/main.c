@@ -1,24 +1,27 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
 #include "littlesnake.h"
 
-int main(int argc, char** argv)
+ int32_t main( int32_t argc, char** argv)
 {
-    char ch;
     display_help();
-    
-    while(1)
+
+    while (1)
     {
-        display_clear_input_buffer();
+        fflush(stdin);
         printf("\n\nEnter your Choice: ");
-        
-        if(scanf(" %c", &ch) != 1) {
-            display_clear_input_buffer();
+
+        char ch = '0';
+        if (scanf(" %c", &ch) != 1) {
+            fflush(stdin);
             continue;
         }
-        
+
         // uppercase/lowercase input
         ch = tolower(ch);
-        
-        if(ch == 'p')
+
+        if (ch == 'p')
         {
             glutInit(&argc, argv);
             glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -26,13 +29,13 @@ int main(int argc, char** argv)
             glutInitWindowPosition(800, 300);
             glutCreateWindow("Snake Game");
             glutDisplayFunc(gamestate_call_display);
-            glutSpecialFunc(gamestate_call_keyboard);
-            glutKeyboardFunc(gamestate_call_keyboard_special);
+            glutKeyboardFunc(gamestate_call_keyboard);
+            glutSpecialFunc(gamestate_call_keyboard_special);
             gamestate_call_init();
             glutMainLoop();
         }
 
-        else if(ch == 'q') {
+        else if (ch == 'q') {
             display_quit();
         }
         else
@@ -41,6 +44,6 @@ int main(int argc, char** argv)
             display_help();
         }
     }
-    
+
     return 0;
 }
