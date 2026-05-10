@@ -12,7 +12,7 @@
 
 #include <time.h>
 
-#include <gl/GL.h>
+#include <GL/gl.h>
 
 /// @brief global state
 gamestate_t g_GameState;
@@ -270,7 +270,7 @@ bool gamestate_init()
     g_GameState.play = false;
 
     ogl_init();
-    generate_obstacles(); // Generate obstacles at game start
+    generate_obstacles(); // generate obstacles at game start
     return gamestate_init_node();
 }
 

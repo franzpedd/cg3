@@ -1,9 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <ctype.h>
 
 #include "littlesnake.h"
 
- int32_t main( int32_t argc, char** argv)
+int32_t main( int32_t argc, char** argv)
 {
     display_help();
 
