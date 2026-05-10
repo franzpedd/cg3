@@ -518,7 +518,7 @@ void display_help()
     printf("\n p : Start / Play / Pause ");
     printf("\n q : Exit");
     printf("\n     Use arrow key to move the snake ");
-    printf("\n [1 - 9] : change level of your game");
+    printf("\n [1 - 9] : change speed level of your game");
     printf("\n-----------------------------------------------------------\n");
 
     fflush(stdin);
